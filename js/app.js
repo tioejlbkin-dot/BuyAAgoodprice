@@ -8,7 +8,7 @@ const state = {
 
 const CURRENCY_RATES = { USD: 1, RUB: 92, EUR: 0.92, GBP: 0.79 };
 const CURRENCY_SYMBOL = { USD: "$", RUB: "₽", EUR: "€", GBP: "£" };
-const COUNTRY_NAMES = { US: "США", RU: "Россия", DE: "Германия", GB: "Великобритания" };
+const COUNTRY_NAMES = { US: "США", RU: "Россия", DE: "Германия", GB: "Великобритания", FR: "Франция", IT: "Италия", ES: "Испания", CA: "Канада", AU: "Австралия" };
 const STORE_COLORS = ["#5b6cff", "#8a5bff", "#0ea5e9", "#14b8a6", "#f59e0b", "#ef4444", "#10b981"];
 
 const grid = document.getElementById("results-grid");
@@ -233,10 +233,10 @@ function panelHTML(p) {
       (discount ? '<span class="panel-discount">−' + discount + "%</span>" : "") +
     "</div>" +
     '<a class="btn-buy" href="' + (p.link || "#") + '" target="_blank" rel="noopener"' + (p.link ? "" : ' onclick="return false"') + ">" +
-    (p.link ? "Перейти в магазин" : "Ссылка появится после подключения API") + "</a>" +
+    (p.link ? "Перейти в магазин" : "Ссылка недоступна") + "</a>" +
     '<p class="panel-note">' + (p.link
       ? "Откроется страница товара на " + p.store + " в новой вкладке. Цена на сайте магазина может немного отличаться."
-      : "Демо-режим: подключите Admitad API, чтобы получать реальные ссылки на товары.") + "</p>" +
+      : "Маркетплейс не ответил — попробуйте позже или измените запрос.") + "</p>" +
     '<div class="panel-block">' +
       "<h3>Индекс доверия <span class=\"trust-big " + t.cls + "\">" + p.trust + "%</span></h3>" +
       '<ul class="trust-list">' + trustList + "</ul>" +
@@ -299,7 +299,7 @@ function filterDemo() {
 function renderDemo() {
   const list = filterDemo();
   renderProducts(list);
-  resultsSub.textContent = "Демо-данные: API ещё не подключён, реальные товары появятся после подключения Admitad" +
+  resultsSub.textContent = "Демо-данные: маркетплейсы временно недоступны, показан каталог из демо-набора" +
     (state.country !== "ALL" ? " · " + COUNTRY_NAMES[state.country] : "");
   resultsCount.textContent = list.length + " " + plural(list.length, "товар", "товара", "товаров") +
     " (демо)";
@@ -324,10 +324,16 @@ async function doSearch() {
     const data = await res.json();
     if (!data.demo && data.products && data.products.length) {
       renderProducts(data.products);
+      if (data.warning) {
+        resultsSub.textContent = data.warning;
+      }
     } else if (data.demo) {
       renderDemo();
     } else {
       renderProducts([]);
+      if (data.warning) {
+        resultsSub.textContent = data.warning;
+      }
     }
   } catch (e) {
     renderDemo();
