@@ -825,3 +825,5 @@ select { font-family: inherit; }
   .offer-info { align-items: flex-start; }
   .offer-meta { justify-content: flex-start; }
 }
+.loading { grid-column: 1 / -1; text-align: center; padding: 60px 0; color: #6b7392; font-size: 15px; font-weight: 600; }
+

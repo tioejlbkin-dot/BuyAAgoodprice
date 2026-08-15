@@ -42,7 +42,7 @@
 <section class="hero">
   <div class="hero-inner">
     <h1>Лучшая цена — в один клик</h1>
-    <p class="hero-sub">Мы сравниваем предложения маркетплейсов вашей страны, проверяем продавцов и показываем, где купить выгодно и безопасно.</p>
+    <p class="hero-sub">Мы ищем один и тот же товар по всем маркетплейсам вашей страны, проверяем магазины и показываем, где купить выгодно и безопасно. Реальные цены и ссылки.</p>
     <form class="search-form" id="search-form">
       <input type="text" id="search-input" placeholder="Что ищете? Например: утюг" autocomplete="off">
       <button type="submit" class="btn-search">Найти</button>
@@ -72,13 +72,11 @@
     </div>
     <div class="results-right">
       <span class="results-count" id="results-count"></span>
-      <button class="filters-btn" id="filters-btn" hidden>Фильтры<span class="filters-count" id="filters-count" hidden></span></button>
       <label class="ctl sort-ctl">Сортировка
         <select id="sort-select">
-          <option value="best" selected>Лучшее предложение</option>
-          <option value="cheap">Сначала дешевле</option>
+          <option value="best" selected>Сначала дешевле</option>
           <option value="expensive">Сначала дороже</option>
-          <option value="rating">По рейтингу</option>
+          <option value="rating">По надёжности магазина</option>
         </select>
       </label>
     </div>
@@ -93,7 +91,7 @@
 
 <footer class="site-footer">
   <div class="logo">Buy<span class="logo-accent">A</span>Good<span class="logo-accent">price</span></div>
-  <p>&copy; 2026 BuyAAgoodprice. Демо-версия: товары, цены и ссылки — примеры, реальные данные подключатся позже.</p>
+  <p>&copy; 2026 BuyAAgoodprice. Реальные товары, цены и ссылки подключаются через партнёрскую сеть Admitad.</p>
 </footer>
 
 <div class="overlay" id="overlay" hidden></div>
@@ -108,26 +106,9 @@
 <aside class="settings-panel" id="settings-panel">
   <button class="settings-close" id="settings-close" aria-label="Закрыть">&times;</button>
   <h2>Приоритеты поиска</h2>
-  <p class="settings-sub">Сайт будет показывать только предложения, которые проходят выбранные вами пороги. «Лучшее предложение» тоже учитывает оценку товара.</p>
+  <p class="settings-sub">Сайт покажет только предложения магазинов, которые проходят выбранные вами пороги. Рейтинг магазина — оценка надёжности площадки по отзывам партнёров.</p>
   <div class="settings-group">
-    <label class="ctl">Оценка товара
-      <select id="prio-rating">
-        <option value="">Не важно</option>
-        <option value="4.0">Не ниже 4.0</option>
-        <option value="4.3">Не ниже 4.3</option>
-        <option value="4.5">Не ниже 4.5</option>
-        <option value="4.7">Не ниже 4.7</option>
-      </select>
-    </label>
-    <label class="ctl">Рейтинг продавца
-      <select id="prio-seller">
-        <option value="">Не важно</option>
-        <option value="4.0">Не ниже 4.0</option>
-        <option value="4.3">Не ниже 4.3</option>
-        <option value="4.5">Не ниже 4.5</option>
-      </select>
-    </label>
-    <label class="ctl">Индекс доверия
+    <label class="ctl">Рейтинг магазина
       <select id="prio-trust">
         <option value="">Не важно</option>
         <option value="70">Не ниже 70%</option>
@@ -135,31 +116,11 @@
         <option value="90">Не ниже 90%</option>
       </select>
     </label>
-    <label class="ctl">Количество отзывов у товара
-      <select id="prio-reviews">
-        <option value="">Не важно</option>
-        <option value="100">От 100</option>
-        <option value="500">От 500</option>
-        <option value="1000">От 1000</option>
-      </select>
-    </label>
     <label class="filter-option settings-check">
-      <input type="checkbox" id="prio-verified"> Только проверенные продавцы
+      <input type="checkbox" id="prio-verified"> Только проверенные магазины
     </label>
   </div>
   <button class="settings-reset" id="settings-reset">Сбросить приоритеты</button>
-</aside>
-
-<div class="overlay" id="filters-overlay" hidden></div>
-
-<aside class="filters-panel" id="filters-panel">
-  <button class="filters-close" id="filters-close" aria-label="Закрыть">&times;</button>
-  <div class="filters-panel-head">
-    <h2>Фильтры</h2>
-    <button class="filter-reset" id="filter-reset" hidden>Сбросить</button>
-  </div>
-  <p class="filters-sub">Подстраиваются под ваш запрос</p>
-  <div id="filter-groups"></div>
 </aside>
 
 <script src="js/data.js"></script>
