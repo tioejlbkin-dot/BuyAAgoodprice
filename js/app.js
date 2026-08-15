@@ -16,7 +16,14 @@ const FILTER_DEFS = {
   "монитор": [{ id: "brand", label: "Бренд" }, { id: "size", label: "Диагональ" }, { id: "hz", label: "Частота" }, { id: "matrix", label: "Матрица" }, { id: "res", label: "Разрешение" }],
   "одежда": [{ id: "brand", label: "Бренд" }, { id: "type", label: "Тип" }, { id: "size", label: "Размер" }, { id: "color", label: "Цвет" }, { id: "material", label: "Материал" }],
   "кофеварка": [{ id: "brand", label: "Бренд" }, { id: "type", label: "Тип" }, { id: "tank", label: "Объём" }],
-  "блендер": [{ id: "brand", label: "Бренд" }, { id: "type", label: "Тип" }, { id: "powerW", label: "Мощность" }]
+  "блендер": [{ id: "brand", label: "Бренд" }, { id: "type", label: "Тип" }, { id: "powerW", label: "Мощность" }],
+  "телевизор": [{ id: "brand", label: "Бренд" }, { id: "size", label: "Диагональ" }, { id: "res", label: "Разрешение" }, { id: "matrix", label: "Матрица" }],
+  "пылесос": [{ id: "brand", label: "Бренд" }, { id: "type", label: "Тип" }, { id: "powerW", label: "Мощность" }],
+  "смарт-часы": [{ id: "brand", label: "Бренд" }, { id: "battery", label: "Батарея" }, { id: "screen", label: "Экран" }],
+  "планшет": [{ id: "brand", label: "Бренд" }, { id: "screen", label: "Экран" }, { id: "memory", label: "Память" }],
+  "колонка": [{ id: "brand", label: "Бренд" }, { id: "powerW", label: "Мощность" }, { id: "bt", label: "Bluetooth" }],
+  "чайник": [{ id: "brand", label: "Бренд" }, { id: "tank", label: "Объём" }],
+  "микроволновка": [{ id: "brand", label: "Бренд" }, { id: "tank", label: "Объём" }, { id: "powerW", label: "Мощность" }]
 };
 
 const MODEL_ATTRS = {
@@ -36,7 +43,24 @@ const MODEL_ATTRS = {
   m14: { brand: "DeLonghi", type: "эспрессо-машина", tank: "1 л" },
   m15: { brand: "Bosch", type: "капельная", tank: "1.25 л" },
   m16: { brand: "Philips", type: "погружной", powerW: "700 Вт" },
-  m17: { brand: "Bosch", type: "стационарный", powerW: "600 Вт" }
+  m17: { brand: "Bosch", type: "стационарный", powerW: "600 Вт" },
+  m25: { brand: "Samsung", size: "55\"", res: "4K", matrix: "VA" },
+  m26: { brand: "LG", size: "55\"", res: "4K", matrix: "OLED" },
+  m27: { brand: "TCL", size: "50\"", res: "4K", matrix: "QLED" },
+  m28: { brand: "Dyson", type: "вертикальный", powerW: "150 Вт" },
+  m29: { brand: "Xiaomi", type: "робот-пылесос", powerW: "55 Вт" },
+  m30: { brand: "Bosch", type: "цилиндрический", powerW: "700 Вт" },
+  m31: { brand: "Apple", screen: '1.9"', battery: "18 ч" },
+  m32: { brand: "Samsung", screen: '1.5"', battery: "40 ч" },
+  m33: { brand: "Xiaomi", screen: '1.43"', battery: "15 дней" },
+  m34: { brand: "Apple", screen: '10.9"', memory: "64 ГБ" },
+  m35: { brand: "Samsung", screen: '10.9"', memory: "128 ГБ" },
+  m36: { brand: "JBL", powerW: "20 Вт", bt: "5.1" },
+  m37: { brand: "Xiaomi", powerW: "30 Вт", bt: "5.0" },
+  m38: { brand: "Bosch", tank: "1.7 л" },
+  m39: { brand: "Polaris", tank: "1.8 л" },
+  m40: { brand: "Samsung", tank: "23 л", powerW: "800 Вт" },
+  m41: { brand: "LG", tank: "20 л", powerW: "700 Вт" }
 };
 
 const CURRENCY_RATES = { USD: 1, RUB: 92, EUR: 0.92, GBP: 0.79 };
@@ -74,6 +98,44 @@ function trustMeta(trust) {
   if (trust >= 85) return { cls: "good", label: "Надёжно" };
   if (trust >= 70) return { cls: "mid", label: "Проверьте продавца" };
   return { cls: "bad", label: "Высокий риск" };
+}
+
+const CATEGORY_COLORS = {
+  "наушники": ["#5b6cff", "#8a5bff"],
+  "утюг": ["#f59e0b", "#ef4444"],
+  "ноутбук": ["#0ea5e9", "#5b6cff"],
+  "смартфон": ["#14b8a6", "#0ea5e9"],
+  "монитор": ["#8a5bff", "#ec4899"],
+  "одежда": ["#10b981", "#14b8a6"],
+  "кофеварка": ["#f97316", "#f59e0b"],
+  "блендер": ["#ef4444", "#f97316"],
+  "телевизор": ["#5b6cff", "#0ea5e9"],
+  "пылесос": ["#14b8a6", "#10b981"],
+  "смарт-часы": ["#8a5bff", "#5b6cff"],
+  "планшет": ["#ec4899", "#8a5bff"],
+  "колонка": ["#f59e0b", "#f97316"],
+  "чайник": ["#0ea5e9", "#14b8a6"],
+  "микроволновка": ["#ef4444", "#f97316"]
+};
+
+function catColors(cat) {
+  return CATEGORY_COLORS[cat] || ["#5b6cff", "#8a5bff"];
+}
+
+function modelImage(m) {
+  const brand = String(modelAttrs(m).brand || m.category || "?");
+  const letter = brand.charAt(0).toUpperCase();
+  const colors = catColors(m.category);
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="450">' +
+    '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
+    '<stop offset="0%" stop-color="' + colors[0] + '"/>' +
+    '<stop offset="100%" stop-color="' + colors[1] + '"/></linearGradient></defs>' +
+    '<rect width="100%" height="100%" fill="url(#g)"/>' +
+    '<circle cx="480" cy="60" r="120" fill="rgba(255,255,255,0.12)"/>' +
+    '<circle cx="80" cy="390" r="90" fill="rgba(255,255,255,0.10)"/>' +
+    '<text x="50%" y="52%" font-family="Arial, sans-serif" font-size="200" font-weight="700" fill="rgba(255,255,255,0.92)" text-anchor="middle" dominant-baseline="middle">' + letter + "</text>" +
+    '<text x="50%" y="88%" font-family="Arial, sans-serif" font-size="34" fill="rgba(255,255,255,0.75)" text-anchor="middle">' + m.category + "</text></svg>";
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
 }
 
 function imgFallback(img) {
@@ -327,7 +389,7 @@ function modelBestPrice(m) {
 
 function modelCardHTML(m, meta) {
   return '<article class="card" data-model="' + m.id + '">' +
-    '<div class="card-img"><img src="' + m.image + '" alt="' + m.name + '" loading="lazy" onerror="imgFallback(this)"></div>' +
+    '<div class="card-img"><img src="' + modelImage(m) + '" alt="' + m.name + '" loading="lazy"></div>' +
     '<div class="card-body">' +
       '<div class="card-cat">' + m.category + "</div>" +
       '<h3 class="card-name">' + m.name + "</h3>" +
@@ -465,7 +527,7 @@ function panelHTML(model, offer) {
   ).join("");
   const discount = offer.old ? Math.round((1 - offer.price / offer.old) * 100) : 0;
 
-  return '<img class="panel-img" src="' + model.image + '" alt="' + model.name + '" onerror="imgFallback(this)">' +
+  return '<img class="panel-img" src="' + modelImage(model) + '" alt="' + model.name + '">' +
     '<div class="panel-store">' + offer.store + ' <span class="dot">•</span> ' + COUNTRY_NAMES[STORE_COUNTRIES[offer.store]] + "</div>" +
     '<h2 class="panel-title">' + model.name + "</h2>" +
     '<div class="panel-rating">' + starsHTML(offer.rating) + " <span>" + offer.rating + " · " + offer.reviews.toLocaleString("ru-RU") + " отзывов</span></div>" +
